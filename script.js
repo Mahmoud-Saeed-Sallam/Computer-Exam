@@ -1,4 +1,4 @@
-// 1. مصفوفة بيانات الامتحان الكاملة (تم الحفاظ عليها بالكامل)
+// 1. مصفوفة بيانات الامتحان الكاملة
 const quizData = {
     trueFalse: [
         { q: "The first step in problem solving is program design.", a: "false" },
@@ -119,7 +119,7 @@ $(function() {
     $("#timerContainer").draggable({ containment: "window" });
 });
 
-// 2. معالجة بدء الامتحان والتحقق من الاسم
+// 2. معالجة بدء الامتحان
 document.getElementById('startBtn').onclick = function() {
     const nameInput = document.getElementById('studentName');
     const nameValue = nameInput ? nameInput.value.trim() : "";
@@ -134,48 +134,45 @@ document.getElementById('startBtn').onclick = function() {
     }
 
     studentFullName = nameValue;
-    document.getElementById('welcomeScreen').style.display = 'none';
-    document.getElementById('examContainer').style.display = 'block';
-    
-    // إظهار شريط التنقل العلوي
-    const nav = document.getElementById('sectionNav');
-    if(nav) nav.style.display = 'block';
-
+    initExamView();
     renderQuestions();
     startTimer();
     updateProgress();
 };
 
-// 3. تحديث شريط التقدم (Progress Counter)
+function initExamView() {
+    document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('examContainer').style.display = 'block';
+    const nav = document.getElementById('sectionNav');
+    if(nav) nav.style.display = 'block';
+}
+
+// 3. تحديث شريط التقدم والحفظ التلقائي
 function updateProgress() {
     let answered = 0;
     const total = 100;
-
-    // الأسئلة المعتمدة على الاختيار (Radio Buttons)
     const checkedRadios = document.querySelectorAll('input[type="radio"]:checked');
     answered += checkedRadios.length;
 
-    // الأسئلة المعتمدة على السحب (Drop Zones)
     document.querySelectorAll('.drop-zone').forEach(zone => {
-        if (zone.innerText.trim() !== "") {
-            answered++;
-        }
+        if (zone.innerText.trim() !== "") answered++;
     });
 
     const counterEl = document.getElementById('questionCounter');
-    if (counterEl) counterEl.innerText = `Progress: ${answered} / ${total}`;
+    if (counterEl) counterEl.innerText = `${answered} / ${total}`;
+    
+    saveProgress(); 
 }
 
-// 4. وظيفة تثبيت صندوق الكلمات (معدلة لتلغي التثبيتات الأخرى)
+// 4. وظيفة تثبيت صندوق الكلمات
 function togglePin(bankId, checkbox) {
-    // إلغاء تثبيت أي بن آخر أولاً لضمان عدم تغطية الشاشة
     document.querySelectorAll('.drag-bank').forEach(b => b.classList.remove('pinned'));
     document.querySelectorAll('.pin-wrapper input').forEach(c => { if(c !== checkbox) c.checked = false; });
 
     const bank = document.getElementById(bankId);
     if (checkbox.checked) {
         bank.classList.add('pinned');
-        document.body.style.paddingTop = "180px"; // مساحة كافية للبن المثبت
+        document.body.style.paddingTop = "180px";
     } else {
         bank.classList.remove('pinned');
         document.body.style.paddingTop = "0px";
@@ -217,7 +214,7 @@ function renderQuestions() {
         html += `</div>`;
     });
 
-    // التكملة (نظام نقل الكلمات)
+    // التكملة
     html += `<div id="sec3" class="section-header"><h3>Third: Drag the word to Complete (20 Qs)</h3></div>`;
     let compWords = quizData.complete.map(x => x.a).sort(() => Math.random() - 0.5);
     html += `<div class="drag-bank" id="completeBank">
@@ -231,7 +228,7 @@ function renderQuestions() {
         html += `<div class="card card-question"><p>${i+61}. ${qText}</p></div>`;
     });
 
-    // الكلمة المختلفة (نظام التبادل التلقائي)
+    // الكلمة المختلفة
     html += `<div id="sec4" class="section-header"><h3>Fourth: Drag the ODD word (10 Qs)</h3></div>`;
     quizData.oddOne.forEach((item, i) => {
         let words = item.q.split(' - ');
@@ -245,7 +242,7 @@ function renderQuestions() {
         </div>`;
     });
 
-    // التوصيل (نظام نقل الكلمات)
+    // التوصيل
     html += `<div id="sec5" class="section-header"><h3>Fifth: Drag from Column B to A (10 Qs)</h3></div>`;
     let matchWords = quizData.matching.map(x => x.b).sort(() => Math.random() - 0.5);
     html += `<div class="drag-bank" id="matchBank">
@@ -268,9 +265,8 @@ function renderQuestions() {
     initSortables();
 }
 
-// 6. تهيئة السحب والإفلات (مع الوظائف الجديدة)
+// 6. تهيئة السحب والإفلات
 function initSortables() {
-    // إعدادات المجموعات المشتركة للأقسام 3 و 5 (نظام نقل Pull/Put)
     const transferConfig = { 
         group: 'quizTransfer', 
         animation: 150, 
@@ -290,25 +286,18 @@ function initSortables() {
         });
     });
 
-    // إعدادات القسم 4 (نظام التبادل التلقائي للأود ون)
     quizData.oddOne.forEach((_, i) => {
         const bank = document.getElementById(`bankOdd${i}`);
         const drop = document.getElementById(`dropOdd${i}`);
-
-        new Sortable(bank, { 
-            group: `oddGroup${i}`, 
-            animation: 150 
-        });
-
+        new Sortable(bank, { group: `oddGroup${i}`, animation: 150 });
         new Sortable(drop, { 
             group: `oddGroup${i}`, 
             maxItems: 1,
             animation: 150,
             onAdd: function(evt) {
-                // إذا كان الزون يحتوي على أكثر من عنصر (الجديد + القديم)
                 if (drop.children.length > 1) {
                     const oldItem = (evt.item === drop.children[0]) ? drop.children[1] : drop.children[0];
-                    bank.appendChild(oldItem); // إعادة الكلمة السابقة لمكانها
+                    bank.appendChild(oldItem);
                 }
                 updateProgress();
             },
@@ -317,7 +306,6 @@ function initSortables() {
     });
 }
 
-// 7. اختيار الراديو يدوياً
 function selectOpt(el, name) {
     document.getElementsByName(name).forEach(input => input.parentElement.classList.remove('selected'));
     el.classList.add('selected');
@@ -326,7 +314,6 @@ function selectOpt(el, name) {
     updateProgress();
 }
 
-// 8. مؤقت الامتحان (مع تحسين العرض والتحكم)
 function startTimer() {
     const timerContainer = document.getElementById('timerContainer');
     if (timerContainer) timerContainer.style.display = 'block';
@@ -346,42 +333,36 @@ function startTimer() {
     }, 1000);
 }
 
-// 9. حساب النتيجة والمراجعة (كامل كما في الأصل)
 document.getElementById('submitBtn').onclick = calculate;
 
 function calculate() {
     let finalScore = 0;
     let reviewHtml = "";
 
-    // 1. True/False
     quizData.trueFalse.forEach((item, i) => {
         let selected = document.querySelector(`input[name="tf${i}"]:checked`)?.value;
         if (selected === item.a) { finalScore++; }
         else { reviewHtml += createReviewRow(i+1, item.q, selected || "No Answer", item.a); }
     });
 
-    // 2. MCQ
     quizData.mcq.forEach((item, i) => {
         let selIdx = document.querySelector(`input[name="mcq${i}"]:checked`)?.value;
         if (parseInt(selIdx) === item.a) { finalScore++; }
         else { reviewHtml += createReviewRow(i+31, item.q, selIdx !== undefined ? item.opts[selIdx] : "No Answer", item.opts[item.a]); }
     });
 
-    // 3. Complete
     quizData.complete.forEach((item, i) => {
         let val = document.getElementById(`dropComp${i}`).innerText.trim();
         if (val === item.a) { finalScore++; }
         else { reviewHtml += createReviewRow(i+61, item.q, val || "Empty", item.a); }
     });
 
-    // 4. Odd One
     quizData.oddOne.forEach((item, i) => {
         let val = document.getElementById(`dropOdd${i}`).innerText.trim();
         if (val === item.a) { finalScore++; }
         else { reviewHtml += createReviewRow(i+81, item.q, val || "Empty", item.a); }
     });
 
-    // 5. Matching
     quizData.matching.forEach((item, i) => {
         let val = document.getElementById(`dropMatch${i}`).innerText.trim();
         if (val === item.b) { finalScore++; }
@@ -400,17 +381,13 @@ function createReviewRow(num, q, userAns, correctAns) {
     </div>`;
 }
 
-// 10. شاشة النتيجة النهائية والاحتفال
+// 7. شاشة النتيجة النهائية
 function showFinal(finalScore, reviewHtml) {
+    localStorage.removeItem('examProgress');
     const isSuccess = finalScore >= 75;
 
     if (isSuccess) {
-        confetti({
-            particleCount: 200,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ['#0984e3', '#00cec9', '#ffffff']
-        });
+        confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 }, colors: ['#0984e3', '#00cec9', '#ffffff'] });
     }
 
     Swal.fire({
@@ -421,7 +398,6 @@ function showFinal(finalScore, reviewHtml) {
                 <h3 class="text-dark">${studentFullName}</h3>
                 <h2 class="${isSuccess ? 'text-success' : 'text-danger'} fw-bold" style="font-size: 3rem;">${finalScore}/100</h2>
                 <p class="text-secondary">Instructor: Eng. Mahmoud Saeed</p>
-                ${isSuccess ? '<p class="text-primary fw-bold">Congratulations on passing with honors!</p>' : ''}
             </div>
         `,
         confirmButtonText: 'Review Mistakes',
@@ -440,3 +416,55 @@ function showFinal(finalScore, reviewHtml) {
         }
     });
 }
+
+// 8. وظائف التخزين (LocalStorage) - خارج الأقواس لتعمل دائماً
+function saveProgress() {
+    if (!studentFullName) return;
+    const progress = {
+        studentFullName: studentFullName,
+        examStarted: document.getElementById('examContainer').style.display === 'block',
+        radios: Array.from(document.querySelectorAll('input[type="radio"]:checked')).map(r => ({ name: r.name, value: r.value })),
+        drops: Array.from(document.querySelectorAll('.drop-zone')).map(z => ({ id: z.id, html: z.innerHTML })),
+        banks: {
+            comp: document.getElementById('compItemsContainer')?.innerHTML,
+            match: document.getElementById('matchItemsContainer')?.innerHTML,
+            odds: Array.from(document.querySelectorAll('.odd-bank-container')).map(b => ({id: b.id, html: b.innerHTML}))
+        }
+    };
+    localStorage.setItem('examProgress', JSON.stringify(progress));
+}
+
+window.onload = function() {
+    const saved = localStorage.getItem('examProgress');
+    if (saved) {
+        const data = JSON.parse(saved);
+        if (data.examStarted) {
+            studentFullName = data.studentFullName;
+            initExamView();
+            renderQuestions();
+            
+            data.radios.forEach(r => {
+                const input = document.querySelector(`input[name="${r.name}"][value="${r.value}"]`);
+                if (input) {
+                    input.checked = true;
+                    input.parentElement.classList.add('selected');
+                }
+            });
+
+            data.drops.forEach(d => {
+                const zone = document.getElementById(d.id);
+                if (zone) zone.innerHTML = d.html;
+            });
+
+            if (data.banks.comp) document.getElementById('compItemsContainer').innerHTML = data.banks.comp;
+            if (data.banks.match) document.getElementById('matchItemsContainer').innerHTML = data.banks.match;
+            data.banks.odds.forEach(b => {
+                const bank = document.getElementById(b.id);
+                if (bank) bank.innerHTML = b.html;
+            });
+
+            startTimer();
+            updateProgress();
+        }
+    }
+};
