@@ -1,0 +1,189 @@
+:root {
+    --dark-bg: #1e272e;
+    --primary-blue: #0984e3;
+    --success-green: #00b894;
+    --accent-color: #f1c40f;
+}
+
+body {
+    font-family: 'Poppins', 'Cairo', sans-serif;
+    background-color: #2f3640;
+    color: #f5f6fa;
+    font-size: 1.15rem;
+}
+
+.hero-section {
+    background: var(--dark-bg);
+    padding: 60px 40px;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border: 1px solid #3d3d3d;
+}
+
+.profile-img {
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    border: 5px solid var(--primary-blue);
+    margin-bottom: 25px;
+    transition: 0.3s;
+}
+
+.pulse-button {
+    background: var(--success-green);
+    color: white;
+    padding: 15px 40px;
+    border-radius: 50px;
+    border: none;
+    font-weight: bold;
+    box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.7);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 184, 148, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(0, 184, 148, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 184, 148, 0); }
+}
+
+.card-question {
+    background: #ffffff;
+    color: #2d3436;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 0 #dcdde1; /* 3D Effect */
+    border: 2px solid #dcdde1;
+}
+
+.type-a { border-left: 10px solid var(--primary-blue); }
+.type-b { border-left: 10px solid var(--success-green); background: #f9fbff; }
+
+/* 3D Option Buttons */
+.option-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 15px 20px;
+    margin: 10px 0;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #ccc;
+    transition: 0.1s;
+}
+
+.option-container.selected {
+    border-color: var(--primary-blue);
+    background: #e1f5fe;
+    box-shadow: 0 2px 0 var(--primary-blue);
+    transform: translateY(3px);
+}
+
+.option-container input { order: 1; margin-left: 15px; width: 20px; height: 20px; }
+
+/* Drag and Drop Areas */
+.drag-bank {
+    background: #3d3d3d; padding: 20px; border-radius: 15px; display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+}
+
+.draggable-item {
+    background: var(--primary-blue); color: white; padding: 10px 20px; border-radius: 8px; cursor: grab; font-weight: bold;
+}
+
+.drop-zone {
+    display: inline-block; width: 180px; height: 45px; border: 2px dashed var(--primary-blue); border-radius: 8px; vertical-align: middle; background: #f1f2f6;
+}
+
+.section-header { text-align: center; margin: 40px 0; padding: 15px; border-radius: 10px; background: var(--primary-blue); }
+
+.timer-box { position: fixed; top: 20px; right: 20px; background: #aa6a0b; padding: 10px 20px; border-radius: 50px; z-index: 1000; font-weight: bold; }
+/* زر التثبيت والتنسيق الخاص به */
+.pin-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    background: #444;
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: fit-content;
+}
+
+.pin-checkbox {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+/* الوضع المثبت (Sticky Mode) */
+/* تنسيق صندوق الكلمات عند التثبيت */
+.drag-bank.pinned {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    background: #2d3436; /* لون داكن مميز */
+    padding: 15px;
+    border-bottom: 4px solid #0984e3;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* تنسيق حاوية الزر لتكون دائماً في البداية */
+.pin-wrapper {
+    background: #09e34a;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    margin: 5px;
+}
+
+.pin-wrapper input {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* لإضافة مسافة تحت البنك المثبت حتى لا يغطي الأسئلة */
+.content-padding {
+    padding-top: 150px;
+}
+/* تحسينات للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .draggable-item {
+        padding: 5px 10px;
+        font-size: 0.8rem; /* تصغير الخط قليلاً في الموبايل */
+    }
+    
+    .drag-bank.pinned {
+        max-height: 180px; /* تقليل الارتفاع في الموبايل لترك مساحة للأسئلة */
+    }
+
+    .section-header h3 {
+        font-size: 1.2rem;
+    }
+
+    #timerContainer {
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+
+    .card-question {
+        padding: 15px;
+    }
+}
