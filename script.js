@@ -1,4 +1,4 @@
-// 1. مصفوفة بيانات الامتحان الكاملة
+// 1. مصفوفة بيانات الامتحان الكاملة (تم الحفاظ عليها بالكامل)
 const quizData = {
     trueFalse: [
         { q: "The first step in problem solving is program design.", a: "false" },
@@ -114,6 +114,11 @@ const quizData = {
 
 let studentFullName = "";
 
+// تفعيل ميزة السحب للتايمر باستخدام jQuery UI
+$(function() {
+    $("#timerContainer").draggable({ containment: "window" });
+});
+
 // 2. معالجة بدء الامتحان والتحقق من الاسم
 document.getElementById('startBtn').onclick = function() {
     const nameInput = document.getElementById('studentName');
@@ -131,6 +136,11 @@ document.getElementById('startBtn').onclick = function() {
     studentFullName = nameValue;
     document.getElementById('welcomeScreen').style.display = 'none';
     document.getElementById('examContainer').style.display = 'block';
+    
+    // إظهار شريط التنقل العلوي
+    const nav = document.getElementById('sectionNav');
+    if(nav) nav.style.display = 'block';
+
     renderQuestions();
     startTimer();
     updateProgress();
@@ -147,7 +157,7 @@ function updateProgress() {
 
     // الأسئلة المعتمدة على السحب (Drop Zones)
     document.querySelectorAll('.drop-zone').forEach(zone => {
-        if (zone.innerText.trim() !== "" && zone.innerText.trim() !== "Drag Odd Word Here") {
+        if (zone.innerText.trim() !== "") {
             answered++;
         }
     });
@@ -156,12 +166,16 @@ function updateProgress() {
     if (counterEl) counterEl.innerText = `Progress: ${answered} / ${total}`;
 }
 
-// 4. وظيفة تثبيت صندوق الكلمات
+// 4. وظيفة تثبيت صندوق الكلمات (معدلة لتلغي التثبيتات الأخرى)
 function togglePin(bankId, checkbox) {
+    // إلغاء تثبيت أي بن آخر أولاً لضمان عدم تغطية الشاشة
+    document.querySelectorAll('.drag-bank').forEach(b => b.classList.remove('pinned'));
+    document.querySelectorAll('.pin-wrapper input').forEach(c => { if(c !== checkbox) c.checked = false; });
+
     const bank = document.getElementById(bankId);
     if (checkbox.checked) {
         bank.classList.add('pinned');
-        document.body.style.paddingTop = "220px";
+        document.body.style.paddingTop = "180px"; // مساحة كافية للبن المثبت
     } else {
         bank.classList.remove('pinned');
         document.body.style.paddingTop = "0px";
@@ -174,7 +188,7 @@ function renderQuestions() {
     let html = "";
 
     // الصح والخطأ
-    html += `<div class="section-header"><h3>First: True or False (30 Qs)</h3></div>`;
+    html += `<div id="sec1" class="section-header"><h3>First: True or False (30 Qs)</h3></div>`;
     quizData.trueFalse.forEach((item, i) => {
         html += `
         <div class="card card-question">
@@ -191,7 +205,7 @@ function renderQuestions() {
     });
 
     // الاختياري
-    html += `<div class="section-header"><h3>Second: Multiple Choice (30 Qs)</h3></div>`;
+    html += `<div id="sec2" class="section-header"><h3>Second: Multiple Choice (30 Qs)</h3></div>`;
     quizData.mcq.forEach((item, i) => {
         html += `<div class="card card-question"><p><strong>${i+31}. ${item.q}</strong></p>`;
         item.opts.forEach((opt, idx) => {
@@ -203,45 +217,49 @@ function renderQuestions() {
         html += `</div>`;
     });
 
-    // التكملة (مع زر التثبيت)
-    html += `<div class="section-header"><h3>Third: Drag the word to Complete (20 Qs)</h3></div>`;
+    // التكملة (نظام نقل الكلمات)
+    html += `<div id="sec3" class="section-header"><h3>Third: Drag the word to Complete (20 Qs)</h3></div>`;
     let compWords = quizData.complete.map(x => x.a).sort(() => Math.random() - 0.5);
     html += `<div class="drag-bank" id="completeBank">
                 <label class="pin-wrapper"><input type="checkbox" onchange="togglePin('completeBank', this)"> 📌 Pin Box</label>
-                ${compWords.map(w => `<div class="draggable-item">${w}</div>`).join('')}
+                <div class="d-flex flex-wrap gap-2" id="compItemsContainer">
+                    ${compWords.map(w => `<div class="draggable-item">${w}</div>`).join('')}
+                </div>
              </div>`;
     quizData.complete.forEach((item, i) => {
         let qText = item.q.replace("............", `<div class="drop-zone" id="dropComp${i}"></div>`);
         html += `<div class="card card-question"><p>${i+61}. ${qText}</p></div>`;
     });
 
-    // الكلمة المختلفة
-    html += `<div class="section-header"><h3>Fourth: Drag the ODD word (10 Qs)</h3></div>`;
+    // الكلمة المختلفة (نظام التبادل التلقائي)
+    html += `<div id="sec4" class="section-header"><h3>Fourth: Drag the ODD word (10 Qs)</h3></div>`;
     quizData.oddOne.forEach((item, i) => {
         let words = item.q.split(' - ');
         html += `
         <div class="card card-question">
             <p><strong>${i+81}. Which word is different?</strong></p>
-            <div class="d-flex gap-2 mb-3 drag-bank" id="bankOdd${i}">
+            <div class="d-flex gap-2 mb-3 drag-bank odd-bank-container" id="bankOdd${i}">
                 ${words.map(w => `<div class="draggable-item">${w}</div>`).join('')}
             </div>
-            <div class="drop-zone w-100" style="min-height:50px" id="dropOdd${i}">Drag Odd Word Here</div>
+            <div class="drop-zone odd-drop-zone w-100" style="min-height:50px; border: 2px dashed #0984e3;" id="dropOdd${i}"></div>
         </div>`;
     });
 
-    // التوصيل (مع زر التثبيت)
-    html += `<div class="section-header"><h3>Fifth: Drag from Column B to A (10 Qs)</h3></div>`;
+    // التوصيل (نظام نقل الكلمات)
+    html += `<div id="sec5" class="section-header"><h3>Fifth: Drag from Column B to A (10 Qs)</h3></div>`;
     let matchWords = quizData.matching.map(x => x.b).sort(() => Math.random() - 0.5);
     html += `<div class="drag-bank" id="matchBank">
                 <label class="pin-wrapper"><input type="checkbox" onchange="togglePin('matchBank', this)"> 📌 Pin Box</label>
-                ${matchWords.map(w => `<div class="draggable-item">${w}</div>`).join('')}
+                <div class="d-flex flex-wrap gap-2" id="matchItemsContainer">
+                    ${matchWords.map(w => `<div class="draggable-item">${w}</div>`).join('')}
+                </div>
              </div>`;
     quizData.matching.forEach((item, i) => {
         html += `
         <div class="card card-question">
             <div class="row align-items-center">
                 <div class="col-6"><strong>${i+91}. ${item.a}</strong></div>
-                <div class="col-6"><div class="drop-zone w-100" id="dropMatch${i}"></div></div>
+                <div class="col-6"><div class="drop-zone" id="dropMatch${i}"></div></div>
             </div>
         </div>`;
     });
@@ -250,21 +268,21 @@ function renderQuestions() {
     initSortables();
 }
 
-// 6. تهيئة السحب والإفلات
+// 6. تهيئة السحب والإفلات (مع الوظائف الجديدة)
 function initSortables() {
-    const commonConfig = { 
-        group: { name: 'shared', pull: 'clone' }, 
+    // إعدادات المجموعات المشتركة للأقسام 3 و 5 (نظام نقل Pull/Put)
+    const transferConfig = { 
+        group: 'quizTransfer', 
         animation: 150, 
-        filter: '.pin-wrapper',
         onEnd: updateProgress 
     };
 
-    new Sortable(document.getElementById('completeBank'), commonConfig);
-    new Sortable(document.getElementById('matchBank'), commonConfig);
+    new Sortable(document.getElementById('compItemsContainer'), transferConfig);
+    new Sortable(document.getElementById('matchItemsContainer'), transferConfig);
 
-    document.querySelectorAll('.drop-zone').forEach(el => {
+    document.querySelectorAll('.drop-zone:not(.odd-drop-zone)').forEach(el => {
         new Sortable(el, { 
-            group: 'shared', 
+            group: 'quizTransfer', 
             maxItems: 1, 
             animation: 150,
             onAdd: updateProgress,
@@ -272,9 +290,30 @@ function initSortables() {
         });
     });
 
+    // إعدادات القسم 4 (نظام التبادل التلقائي للأود ون)
     quizData.oddOne.forEach((_, i) => {
-        new Sortable(document.getElementById(`bankOdd${i}`), { group: `odd${i}`, animation: 150, onEnd: updateProgress });
-        new Sortable(document.getElementById(`dropOdd${i}`), { group: `odd${i}`, maxItems: 1, onAdd: updateProgress, onRemove: updateProgress });
+        const bank = document.getElementById(`bankOdd${i}`);
+        const drop = document.getElementById(`dropOdd${i}`);
+
+        new Sortable(bank, { 
+            group: `oddGroup${i}`, 
+            animation: 150 
+        });
+
+        new Sortable(drop, { 
+            group: `oddGroup${i}`, 
+            maxItems: 1,
+            animation: 150,
+            onAdd: function(evt) {
+                // إذا كان الزون يحتوي على أكثر من عنصر (الجديد + القديم)
+                if (drop.children.length > 1) {
+                    const oldItem = (evt.item === drop.children[0]) ? drop.children[1] : drop.children[0];
+                    bank.appendChild(oldItem); // إعادة الكلمة السابقة لمكانها
+                }
+                updateProgress();
+            },
+            onRemove: updateProgress
+        });
     });
 }
 
@@ -287,7 +326,7 @@ function selectOpt(el, name) {
     updateProgress();
 }
 
-// 8. مؤقت الامتحان
+// 8. مؤقت الامتحان (مع تحسين العرض والتحكم)
 function startTimer() {
     const timerContainer = document.getElementById('timerContainer');
     if (timerContainer) timerContainer.style.display = 'block';
@@ -307,7 +346,7 @@ function startTimer() {
     }, 1000);
 }
 
-// 9. حساب النتيجة والمراجعة
+// 9. حساب النتيجة والمراجعة (كامل كما في الأصل)
 document.getElementById('submitBtn').onclick = calculate;
 
 function calculate() {
@@ -392,6 +431,7 @@ function showFinal(finalScore, reviewHtml) {
     }).then((res) => {
         if (res.isConfirmed) {
             document.getElementById('examContainer').style.display = 'none';
+            if(document.getElementById('sectionNav')) document.getElementById('sectionNav').style.display = 'none';
             document.getElementById('reviewContainer').style.display = 'block';
             document.getElementById('reviewContent').innerHTML = reviewHtml || "<h4>Legendary! No mistakes at all! 🌟</h4>";
             window.scrollTo(0,0);
