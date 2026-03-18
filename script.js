@@ -1,4 +1,3 @@
-// 1. مصفوفة بيانات الامتحان الكاملة
 // 1. مصفوفة بيانات الامتحان الكاملة (نصوص مطابقة للملف المرفق - الدروس 1 إلى 4)
 const quizData = {
     trueFalse: [
@@ -42,7 +41,11 @@ const quizData = {
         { a: "Chat rooms", b: "Often used for discussing a specific school subject or idea" }
     ]
 };
+
 let studentFullName = "";
+
+// حساب العدد الإجمالي للأسئلة بشكل ديناميكي
+const totalQuestions = quizData.trueFalse.length + quizData.mcq.length + quizData.complete.length + quizData.oddOne.length + quizData.matching.length;
 
 // تفعيل ميزة السحب للتايمر باستخدام jQuery UI
 $(function() {
@@ -80,7 +83,6 @@ function initExamView() {
 // 3. تحديث شريط التقدم والحفظ التلقائي
 function updateProgress() {
     let answered = 0;
-    const total = 100;
     const checkedRadios = document.querySelectorAll('input[type="radio"]:checked');
     answered += checkedRadios.length;
 
@@ -89,7 +91,8 @@ function updateProgress() {
     });
 
     const counterEl = document.getElementById('questionCounter');
-    if (counterEl) counterEl.innerText = `${answered} / ${total}`;
+    // تم التعديل لعرض المجموع الديناميكي
+    if (counterEl) counterEl.innerText = `${answered} / ${totalQuestions}`;
     
     saveProgress(); 
 }
@@ -113,13 +116,14 @@ function togglePin(bankId, checkbox) {
 function renderQuestions() {
     let container = document.getElementById('questionsContent');
     let html = "";
+    let qNum = 1; // عداد الأسئلة الديناميكي
 
     // الصح والخطأ
-    html += `<div id="sec1" class="section-header"><h3>First: True or False (30 Qs)</h3></div>`;
+    html += `<div id="sec1" class="section-header"><h3>First: True or False (${quizData.trueFalse.length} Qs)</h3></div>`;
     quizData.trueFalse.forEach((item, i) => {
         html += `
         <div class="card card-question">
-            <p><strong>${i+1}. ${item.q}</strong></p>
+            <p><strong>${qNum}. ${item.q}</strong></p>
             <div class="d-flex flex-column">
                 <label class="option-container" onclick="selectOpt(this, 'tf${i}')">
                     True <input type="radio" name="tf${i}" value="true" onchange="updateProgress()">
@@ -129,12 +133,13 @@ function renderQuestions() {
                 </label>
             </div>
         </div>`;
+        qNum++;
     });
 
     // الاختياري
-    html += `<div id="sec2" class="section-header"><h3>Second: Multiple Choice (30 Qs)</h3></div>`;
+    html += `<div id="sec2" class="section-header"><h3>Second: Multiple Choice (${quizData.mcq.length} Qs)</h3></div>`;
     quizData.mcq.forEach((item, i) => {
-        html += `<div class="card card-question"><p><strong>${i+31}. ${item.q}</strong></p>`;
+        html += `<div class="card card-question"><p><strong>${qNum}. ${item.q}</strong></p>`;
         item.opts.forEach((opt, idx) => {
             html += `
             <label class="option-container" onclick="selectOpt(this, 'mcq${i}')">
@@ -142,10 +147,11 @@ function renderQuestions() {
             </label>`;
         });
         html += `</div>`;
+        qNum++;
     });
 
     // التكملة
-    html += `<div id="sec3" class="section-header"><h3>Third: Drag the word to Complete (20 Qs)</h3></div>`;
+    html += `<div id="sec3" class="section-header"><h3>Third: Drag the word to Complete (${quizData.complete.length} Qs)</h3></div>`;
     let compWords = quizData.complete.map(x => x.a).sort(() => Math.random() - 0.5);
     html += `<div class="drag-bank" id="completeBank">
                 <label class="pin-wrapper"><input type="checkbox" onchange="togglePin('completeBank', this)"> 📌 Pin Box</label>
@@ -155,25 +161,27 @@ function renderQuestions() {
              </div>`;
     quizData.complete.forEach((item, i) => {
         let qText = item.q.replace("............", `<div class="drop-zone" id="dropComp${i}"></div>`);
-        html += `<div class="card card-question"><p>${i+61}. ${qText}</p></div>`;
+        html += `<div class="card card-question"><p><strong>${qNum}. ${qText}</strong></p></div>`;
+        qNum++;
     });
 
     // الكلمة المختلفة
-    html += `<div id="sec4" class="section-header"><h3>Fourth: Drag the ODD word (10 Qs)</h3></div>`;
+    html += `<div id="sec4" class="section-header"><h3>Fourth: Drag the ODD word (${quizData.oddOne.length} Qs)</h3></div>`;
     quizData.oddOne.forEach((item, i) => {
         let words = item.q.split(' - ');
         html += `
         <div class="card card-question">
-            <p><strong>${i+81}. Which word is different?</strong></p>
+            <p><strong>${qNum}. Which word is different?</strong></p>
             <div class="d-flex gap-2 mb-3 drag-bank odd-bank-container" id="bankOdd${i}">
                 ${words.map(w => `<div class="draggable-item">${w}</div>`).join('')}
             </div>
             <div class="drop-zone odd-drop-zone w-100" style="min-height:50px; border: 2px dashed #0984e3;" id="dropOdd${i}"></div>
         </div>`;
+        qNum++;
     });
 
     // التوصيل
-    html += `<div id="sec5" class="section-header"><h3>Fifth: Drag from Column B to A (10 Qs)</h3></div>`;
+    html += `<div id="sec5" class="section-header"><h3>Fifth: Drag from Column B to A (${quizData.matching.length} Qs)</h3></div>`;
     let matchWords = quizData.matching.map(x => x.b).sort(() => Math.random() - 0.5);
     html += `<div class="drag-bank" id="matchBank">
                 <label class="pin-wrapper"><input type="checkbox" onchange="togglePin('matchBank', this)"> 📌 Pin Box</label>
@@ -185,10 +193,11 @@ function renderQuestions() {
         html += `
         <div class="card card-question">
             <div class="row align-items-center">
-                <div class="col-6"><strong>${i+91}. ${item.a}</strong></div>
+                <div class="col-6"><strong>${qNum}. ${item.a}</strong></div>
                 <div class="col-6"><div class="drop-zone" id="dropMatch${i}"></div></div>
             </div>
         </div>`;
+        qNum++;
     });
 
     container.innerHTML = html;
@@ -268,35 +277,41 @@ document.getElementById('submitBtn').onclick = calculate;
 function calculate() {
     let finalScore = 0;
     let reviewHtml = "";
+    let qNum = 1; // استخدام العداد هنا أيضاً ليتطابق مع العرض
 
     quizData.trueFalse.forEach((item, i) => {
         let selected = document.querySelector(`input[name="tf${i}"]:checked`)?.value;
         if (selected === item.a) { finalScore++; }
-        else { reviewHtml += createReviewRow(i+1, item.q, selected || "No Answer", item.a); }
+        else { reviewHtml += createReviewRow(qNum, item.q, selected || "No Answer", item.a); }
+        qNum++;
     });
 
     quizData.mcq.forEach((item, i) => {
         let selIdx = document.querySelector(`input[name="mcq${i}"]:checked`)?.value;
         if (parseInt(selIdx) === item.a) { finalScore++; }
-        else { reviewHtml += createReviewRow(i+31, item.q, selIdx !== undefined ? item.opts[selIdx] : "No Answer", item.opts[item.a]); }
+        else { reviewHtml += createReviewRow(qNum, item.q, selIdx !== undefined ? item.opts[selIdx] : "No Answer", item.opts[item.a]); }
+        qNum++;
     });
 
     quizData.complete.forEach((item, i) => {
         let val = document.getElementById(`dropComp${i}`).innerText.trim();
         if (val === item.a) { finalScore++; }
-        else { reviewHtml += createReviewRow(i+61, item.q, val || "Empty", item.a); }
+        else { reviewHtml += createReviewRow(qNum, item.q, val || "Empty", item.a); }
+        qNum++;
     });
 
     quizData.oddOne.forEach((item, i) => {
         let val = document.getElementById(`dropOdd${i}`).innerText.trim();
         if (val === item.a) { finalScore++; }
-        else { reviewHtml += createReviewRow(i+81, item.q, val || "Empty", item.a); }
+        else { reviewHtml += createReviewRow(qNum, item.q, val || "Empty", item.a); }
+        qNum++;
     });
 
     quizData.matching.forEach((item, i) => {
         let val = document.getElementById(`dropMatch${i}`).innerText.trim();
         if (val === item.b) { finalScore++; }
-        else { reviewHtml += createReviewRow(i+91, item.a, val || "Empty", item.b); }
+        else { reviewHtml += createReviewRow(qNum, item.a, val || "Empty", item.b); }
+        qNum++;
     });
 
     showFinal(finalScore, reviewHtml);
@@ -314,7 +329,9 @@ function createReviewRow(num, q, userAns, correctAns) {
 // 7. شاشة النتيجة النهائية
 function showFinal(finalScore, reviewHtml) {
     localStorage.removeItem('examProgress');
-    const isSuccess = finalScore >= 75;
+    
+    // نسبة النجاح تم تحويلها لديناميكية (75% من الإجمالي)
+    const isSuccess = finalScore >= (totalQuestions * 0.75);
 
     if (isSuccess) {
         confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 }, colors: ['#0984e3', '#00cec9', '#ffffff'] });
@@ -326,7 +343,7 @@ function showFinal(finalScore, reviewHtml) {
             <div class="py-3">
                 <img src="my_photo.png" style="width:110px; border-radius:50%; border:4px solid #0984e3; margin-bottom:15px;"><br>
                 <h3 class="text-dark">${studentFullName}</h3>
-                <h2 class="${isSuccess ? 'text-success' : 'text-danger'} fw-bold" style="font-size: 3rem;">${finalScore}/100</h2>
+                <h2 class="${isSuccess ? 'text-success' : 'text-danger'} fw-bold" style="font-size: 3rem;">${finalScore}/${totalQuestions}</h2>
                 <p class="text-secondary">Instructor: Eng. Mahmoud Saeed</p>
             </div>
         `,
@@ -347,7 +364,7 @@ function showFinal(finalScore, reviewHtml) {
     });
 }
 
-// 8. وظائف التخزين (LocalStorage) - خارج الأقواس لتعمل دائماً
+// 8. وظائف التخزين (LocalStorage)
 function saveProgress() {
     if (!studentFullName) return;
     const progress = {
