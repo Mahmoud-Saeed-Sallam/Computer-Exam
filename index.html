@@ -20,386 +20,194 @@
             --glass-border: rgba(255, 255, 255, 0.1);
         }
 
-        body {
-            background-color: #050505;
-            color: #ffffff;
-            font-family: 'Cairo', sans-serif;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
-
-        #bg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: radial-gradient(circle at center, #0a0a2e 0%, #000000 100%);
-        }
-
-        .floating-icons {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        .tech-icon {
-            position: absolute;
-            color: var(--neon-cyan);
-            filter: drop-shadow(0 0 10px var(--neon-cyan));
-            animation: float 10s infinite ease-in-out;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-40px) rotate(20deg); }
-        }
+        body { background-color: #050505; color: #ffffff; font-family: 'Cairo', sans-serif; overflow-x: hidden; margin: 0; padding: 0; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at center, #0a0a2e 0%, #000000 100%); }
 
         /* Hero Section */
-        .hero {
-            padding: 100px 20px;
-            text-align: center;
-            perspective: 1000px;
-        }
-
-        .main-title {
-            font-size: 5rem;
-            font-weight: 900;
-            color: var(--neon-cyan);
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-            transform: rotateX(15deg);
-            text-shadow: 0 0 20px rgba(0, 242, 255, 0.7), 
-                         0 0 40px rgba(0, 242, 255, 0.3);
-            animation: titleGlow 3s infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            from { text-shadow: 0 0 20px var(--neon-cyan); }
-            to { text-shadow: 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-blue); }
-        }
-
-        .subtitle {
-            font-size: 1.8rem;
-            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: bold;
-            margin-bottom: 40px;
-        }
+        .hero { padding: 80px 20px; text-align: center; }
+        .main-title { font-size: 3.5rem; font-weight: 900; color: var(--neon-cyan); text-shadow: 0 0 20px var(--neon-cyan); animation: titleGlow 3s infinite alternate; }
+        @keyframes titleGlow { from { text-shadow: 0 0 20px var(--neon-cyan); } to { text-shadow: 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-blue); } }
+        .subtitle { font-size: 1.5rem; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; }
 
         /* Teacher Card */
-        .teacher-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 40px;
-            margin: 50px auto;
-            max-width: 800px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-        }
+        .teacher-card { background: var(--glass-bg); backdrop-filter: blur(15px); border: 1px solid var(--glass-border); border-radius: 30px; padding: 30px; margin: 40px auto; max-width: 700px; text-align: center; border-bottom: 3px solid var(--neon-cyan); }
+        .profile-img { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--neon-cyan); box-shadow: 0 0 20px var(--neon-cyan); margin-bottom: 15px; }
 
-        .teacher-card::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%;
-            width: 200%; height: 200%;
-            background: conic-gradient(transparent, transparent, var(--neon-cyan), transparent);
-            animation: rotateBorder 6s linear infinite;
-            z-index: -1;
-        }
+        /* Stages & Cards */
+        .stage-title { color: var(--neon-orange); font-size: 2.2rem; font-weight: 700; margin: 50px 0 25px; text-align: center; }
+        .glass-card { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; height: 100%; transition: 0.3s; position: relative; }
+        .card-class { color: var(--neon-cyan); font-weight: 800; font-size: 1.2rem; }
 
-        @keyframes rotateBorder { 100% { transform: rotate(360deg); } }
+        /* Buttons & Inactive State */
+        .btn-neon { border-radius: 10px; padding: 12px 20px; font-weight: bold; text-decoration: none; display: inline-block; transition: 0.3s; border: none; }
+        .btn-cyan { background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
+        .btn-inactive { background: #333 !important; color: #777 !important; cursor: not-allowed !important; box-shadow: none !important; transform: none !important; pointer-events: none; }
+        .btn-whatsapp { background: #25d366; color: white; margin: 5px; }
 
-        .teacher-card-inner {
-            background: #0d0d0d;
-            border-radius: 25px;
-            padding: 30px;
-        }
+        /* Modals & Overlays */
+        .custom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
+        .custom-modal { background: #0d0d0d; border: 2px solid var(--neon-cyan); border-radius: 25px; padding: 30px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); }
 
-        .profile-img {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            border: 5px solid var(--neon-cyan);
-            box-shadow: 0 0 30px var(--neon-cyan);
-            margin-bottom: 20px;
-            object-fit: cover;
-        }
+        /* Admin Controls */
+        .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #444; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--neon-cyan); }
+        input:checked + .slider:before { transform: translateX(24px); }
 
-        /* Utility Cards */
-        .stage-title {
-            color: var(--neon-orange);
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 60px 0 30px;
-            text-align: center;
-            text-shadow: 0 0 10px var(--neon-orange);
-        }
+        /* Floating Buttons */
+        .float-btn { position: fixed; z-index: 1000; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; }
+        .help-btn { left: 20px; bottom: 30px; background: var(--neon-purple); border: none; padding: 12px 25px; border-radius: 50px; color: white; font-weight: bold; box-shadow: 0 0 20px var(--neon-purple); }
+        .settings-btn { right: 20px; bottom: 30px; width: 50px; height: 50px; background: #222; border: 1px solid #444; border-radius: 50%; color: #666; font-size: 20px; }
+        .settings-btn:hover { color: var(--neon-cyan); border-color: var(--neon-cyan); transform: rotate(90deg); }
 
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 25px;
-            height: 100%;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .glass-card:hover {
-            transform: translateY(-10px) rotateY(5deg);
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
-        }
-
-        .card-class { color: var(--neon-cyan); font-weight: 900; font-size: 1.4rem; }
-        .card-date { color: #ccc; font-size: 1rem; margin: 10px 0; }
-        .card-time { font-weight: bold; color: #fff; }
-
-        /* Buttons */
-        .btn-neon {
-            border: none;
-            border-radius: 10px;
-            padding: 12px 25px;
-            font-weight: bold;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 15px;
-            text-transform: uppercase;
-        }
-
-        .btn-cyan {
-            background: var(--neon-cyan);
-            color: #000;
-            box-shadow: 0 0 15px var(--neon-cyan);
-        }
-
-        .btn-cyan:hover {
-            box-shadow: 0 0 30px var(--neon-cyan);
-            background: #fff;
-        }
-
-        .btn-whatsapp {
-            background: #25d366;
-            color: white;
-            box-shadow: 0 0 15px #25d366;
-            margin: 10px;
-        }
-
-        .btn-teams {
-            background: #464eb8;
-            color: white;
-            box-shadow: 0 0 20px #464eb8;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        /* New: Floating Help Button & Modal */
-        .side-help-btn {
-            position: fixed;
-            right: 20px;
-            bottom: 40px;
-            z-index: 999;
-            width: 60px;
-            height: 60px;
-            background: var(--neon-purple);
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 0 20px var(--neon-purple);
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .side-help-btn:hover {
-            transform: scale(1.1) rotate(360deg);
-            background: #fff;
-            color: var(--neon-purple);
-        }
-
-        .help-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .help-content {
-            background: #0d0d0d;
-            border: 2px solid var(--neon-purple);
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            position: relative;
-            box-shadow: 0 0 40px var(--neon-purple);
-        }
-
-        .close-help {
-            position: absolute;
-            top: 15px; left: 15px;
-            color: #ff4444;
-            cursor: pointer;
-            font-size: 20px;
-        }
-
-        .help-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
-        }
-
-        .help-item i {
-            color: var(--neon-cyan);
-            margin-left: 15px;
-            font-size: 1.5rem;
-            margin-top: 5px;
-        }
-
-        .highlight-text {
-            color: var(--neon-orange);
-            font-weight: bold;
-            text-decoration: underline;
-        }
-
-        footer {
-            padding: 40px;
-            text-align: center;
-            border-top: 1px solid var(--glass-border);
-            margin-top: 80px;
-            color: #666;
-        }
-
-        @media (max-width: 768px) {
-            .main-title { font-size: 2.5rem; }
-            .subtitle { font-size: 1.2rem; }
-        }
+        footer { padding: 40px; text-align: center; color: #555; }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Floating Help Button -->
-    <button class="side-help-btn" onclick="toggleHelp()">
-        <i class="fas fa-question"></i>
+    <!-- Floating UI -->
+    <button class="float-btn help-btn" onclick="showModal('helpModal')">
+        <i class="fas fa-info-circle me-2"></i> تعليمات الدخول
+    </button>
+
+    <button class="float-btn settings-btn" onclick="askAdminPass()">
+        <i class="fas fa-cog"></i>
     </button>
 
     <!-- Help Modal -->
-    <div class="help-overlay" id="helpOverlay">
-        <div class="help-content text-right">
-            <span class="close-help" onclick="toggleHelp()"><i class="fas fa-times"></i></span>
-            <h4 class="text-center mb-4" style="color:var(--neon-purple)">💡 تعليمات الدخول للمحاضرة</h4>
-            
-            <div class="help-item">
-                <i class="fas fa-download"></i>
-                <div>تأكد من تحميل تطبيق <span class="text-info">Microsoft Teams</span> على جهازك.</div>
-            </div>
-            
-            <div class="help-item">
-                <i class="fas fa-user-edit"></i>
-                <div>
-                    <span class="highlight-text">تنبيه هام جداً:</span> 
-                    يجب كتابة <span class="text-white">اسم الطالب ثلاثياً</span> باللغة العربية عند الدخول، يمنع تماماً الدخول بأسماء أولياء الأمور.
-                </div>
-            </div>
-            
-            <div class="help-item">
-                <i class="fas fa-hourglass-start"></i>
-                <div>بعد الضغط على رابط الصف الخاص بك، انتظر حتى يقوم المحاضر بالموافقة على انضمامك.</div>
-            </div>
+    <!-- <div class="custom-overlay" id="helpModal">
+        <div class="custom-modal">
+            <h4 class="text-center mb-4" style="color:var(--neon-purple)">💡 قواعد وتعليمات المحاضرة</h4>
+            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i>الالتزام بـ <b>الاستئذان</b> قبل التحدث أو طرح سؤال.</div>
+            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i><b>التركيز جيدا</b> أثناء الشرح وتدوين الملاحظات الهامة.</div>
+            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i>الدخول بـ <b>الاسم الثلاثي باللغة العربية</b> لضمان تسجيل الحضور.</div>
+            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i>غلق المايكروفون فور الدخول وعدم فتحه إلا عند الضرورة.</div>
+            <div class="mb-4"><i class="fas fa-check-circle text-info me-2"></i>احترام الزملاء والمحاضر لضمان أقصى استفادة للجميع.</div>
+            <button class="btn btn-neon btn-cyan w-100" onclick="hideModal('helpModal')">فهمت ذلك</button>
+        </div>
+    </div> -->
+    <!-- Help Modal -->
+<div class="custom-overlay" id="helpModal">
+    <div class="custom-modal">
+        
+        <h4 class="text-center mb-4" style="color:var(--neon-purple)">
+            💡 قواعد وتعليمات المحاضرة
+        </h4>
 
-            <div class="help-item">
-                <i class="fas fa-check-circle"></i>
-                <div>بالتوفيق لجميع الطلاب - مستر محمود سعيد</div>
-            </div>
+        <div class="mb-3">
+            <i class="fas fa-link text-success me-2"></i>
+            <b style="color:#00e5ff">طريقة الدخول:</b>
+            الضغط على رابط المحاضرة عبر تطبيق <b>Microsoft Teams</b> ثم اختيار "Join Meeting" والانتظار حتى السماح بالدخول.
+        </div>
 
-            <button class="btn btn-neon btn-cyan w-100 mt-3" onclick="toggleHelp()">فهمت ذلك</button>
+        <div class="mb-3">
+            <i class="fas fa-check-circle text-info me-2"></i>
+            الالتزام بـ <b>الاستئذان</b> قبل التحدث أو طرح سؤال.
+        </div>
+
+        <div class="mb-3">
+            <i class="fas fa-book text-warning me-2"></i>
+            <b>التركيز جيدا</b> أثناء الشرح وتدوين الملاحظات الهامة.
+        </div>
+
+        <div class="mb-3">
+            <i class="fas fa-user text-info me-2"></i>
+            الدخول بـ <b>الاسم الثلاثي باللغة العربية</b> لضمان تسجيل الحضور.
+        </div>
+
+        <div class="mb-3">
+            <i class="fas fa-microphone-slash text-danger me-2"></i>
+            غلق المايكروفون فور الدخول وعدم فتحه إلا عند الضرورة.
+        </div>
+
+        <div class="mb-3">
+            <i class="fas fa-users text-primary me-2"></i>
+            احترام الزملاء والمحاضر لضمان أقصى استفادة للجميع.
+        </div>
+
+        <!-- تعليمات إضافية -->
+        <hr style="border-color:#444">
+
+        <div class="mb-3">
+            <i class="fas fa-clock text-warning me-2"></i>
+            يفضل الدخول قبل موعد المحاضرة بـ <b>5 دقائق</b>.
+        </div>
+
+        <div class="mb-3">
+            <i class="fas fa-wifi text-info me-2"></i>
+            التأكد من <b>ثبات الإنترنت</b> قبل بدء المحاضرة.
+        </div>
+
+        <div class="mb-4">
+            <i class="fas fa-ban text-danger me-2"></i>
+            يمنع مشاركة رابط المحاضرة مع أي شخص غير مسجل.
+        </div>
+
+        <button class="btn btn-neon btn-cyan w-100" onclick="hideModal('helpModal')">
+            فهمت ذلك
+        </button>
+
+    </div>
+</div>
+
+    <!-- Admin Panel Modal -->
+    <div class="custom-overlay" id="adminModal">
+        <div class="custom-modal">
+            <h4 class="text-center mb-4" style="color:var(--neon-cyan)">⚙️ لوحة تحكم المحاضرات</h4>
+            <div id="adminList">
+                <!-- Items populated by JS -->
+            </div>
+            <button class="btn btn-secondary w-100 mt-4" onclick="hideModal('adminModal')">إغلاق اللوحة</button>
         </div>
     </div>
 
-    <div class="floating-icons">
-        <i class="fas fa-robot tech-icon" style="top: 10%; left: 5%; font-size: 3rem;"></i>
-        <i class="fas fa-code tech-icon" style="top: 40%; right: 8%; font-size: 2rem;"></i>
-        <i class="fas fa-microchip tech-icon" style="bottom: 15%; left: 10%; font-size: 4rem;"></i>
-        <i class="fas fa-laptop-code tech-icon" style="top: 20%; right: 15%; font-size: 2.5rem;"></i>
-        <i class="fas fa-brain tech-icon" style="bottom: 30%; right: 5%; font-size: 3rem;"></i>
-    </div>
-
-    <!-- Hero Section -->
+    <!-- Hero -->
     <header class="hero container">
-        <h1 class="main-title">ICT ONLINE REVISION</h1>
-        <p class="subtitle">Programming • Computer • Artificial Intelligence</p>
+        <h1 class="main-title">ICT REVISION</h1>
+        <p class="subtitle">Mr. Mahmoud Saeed | Final Revision 2026</p>
     </header>
 
-    <!-- Teacher Section -->
-    <section class="container">
+    <!-- Teacher -->
+    <section class="container text-center">
         <div class="teacher-card">
-            <div class="teacher-card-inner text-center">
-                <img src="mahmod-saeed.jpg" alt="محمود سعيد" class="profile-img">
-                <h2 class="fw-bold mb-3">مستر محمود سعيد</h2>
-                <p class="px-md-5 opacity-75">
-                    مراجعات نهائية احترافية لمادة الـ ICT، والبرمجة، والذكاء الاصطناعي مع شرح مبسط وحل للامتحانات.
-                </p>
-                <div class="mt-4">
-                    <a href="https://wa.me/201020281736" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-2"></i> 01020281736</a>
-                    <a href="https://wa.me/201151751846" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-2"></i> 01151751846</a>
-                </div>
+            <img src="mahmod-saeed.jpg" alt="محمود سعيد" class="profile-img">
+            <h2 class="fw-bold">مستر محمود سعيد</h2>
+            <p class="opacity-75">خبير الـ ICT والبرمجة بمدارس الخليل للغات</p>
+            <div class="mt-3">
+                <a href="https://wa.me/201020281736" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-1"></i> 01020281736</a>
+                <a href="https://wa.me/201151751846" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-1"></i> 01151751846</a>
             </div>
         </div>
     </section>
 
-    <!-- Main Content (Same as before but with target="_blank") -->
+    <!-- Courses -->
     <main class="container mb-5">
         <h2 class="stage-title">المرحلة الابتدائية</h2>
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="glass-card text-center">
-                    <div class="card-class">الصف الرابع الابتدائي لغات</div>
-                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الأحد 10 / 5 / 2026</div>
-                    <div class="card-time"><i class="far fa-clock me-2"></i> 5:00 PM</div>
-                    <a href="https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                    <div class="card-class">Primary 4</div>
+                    <div class="card-date">الأحد 10 مايو - 5:00 PM</div>
+                    <a id="link-g4" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
-                    <div class="card-class">الصف الخامس الابتدائي لغات</div>
-                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الاثنين 11 / 5 / 2026</div>
-                    <div class="card-time"><i class="far fa-clock me-2"></i> 6:30 PM</div>
-                    <a href="https://teams.microsoft.com/meet/32769944984304?p=jfsTJj6dLPYjtxlJ2s" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                    <div class="card-class">Primary 5</div>
+                    <div class="card-date">الاثنين 11 مايو - 6:30 PM</div>
+                    <a id="link-g5" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
-                    <div class="card-class">الصف السادس الابتدائي لغات</div>
-                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الأحد 10 / 5 / 2026</div>
-                    <div class="card-time"><i class="far fa-clock me-2"></i> 6:30 PM</div>
-                    <a href="https://teams.microsoft.com/meet/32769944984304?p=jfsTJj6dLPYjtxlJ2s" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                    <div class="card-class">Primary 6</div>
+                    <div class="card-date">الأحد 10 مايو - 6:30 PM</div>
+                    <a id="link-g6" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
         </div>
@@ -408,29 +216,23 @@
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="glass-card text-center">
-                    <div class="card-class">الصف الأول الإعدادي لغات</div>
-                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الثلاثاء 12 / 5 / 2026</div>
-                    <div class="card-time"><i class="far fa-clock me-2"></i> 6:00 PM</div>
-                    <a href="https://teams.microsoft.com/meet/34507374067784?p=B8SV6XrdZzfD05TxFx" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                    <div class="card-class">Prep 1</div>
+                    <div class="card-date">الثلاثاء 12 مايو - 6:00 PM</div>
+                    <a id="link-p1" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
-                    <div class="card-class">الصف الثاني الإعدادي لغات</div>
-                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الأحد 10 / 5 / 2026</div>
-                    <div class="card-time"><i class="far fa-clock me-2"></i> 8:00 PM</div>
-                    <a href="https://teams.microsoft.com/meet/39650350947333?p=gO3QEZc2RNmRvUxGLR" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                    <div class="card-class">Prep 2</div>
+                    <div class="card-date">الأحد 10 مايو - 8:00 PM</div>
+                    <a id="link-p2" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
-                    <div class="card-class">الصف الثالث الإعدادي لغات</div>
-                    <div class="card-date">
-                        <i class="far fa-calendar-alt me-1"></i> 13 / 5 (الأربعاء)<br>
-                        <i class="far fa-calendar-alt me-1"></i> 14 / 5 (الخميس)
-                    </div>
-                    <div class="card-time"><i class="far fa-clock me-2"></i> 7:30 PM</div>
-                    <a href="https://teams.microsoft.com/meet/39650350947333?p=gO3QEZc2RNmRvUxGLR" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                    <div class="card-class">Prep 3</div>
+                    <div class="card-date">الأربعاء والخميس - 7:30 PM</div>
+                    <a id="link-p3" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
         </div>
@@ -438,12 +240,10 @@
         <h2 class="stage-title">المرحلة الثانوية</h2>
         <div class="row g-4 justify-content-center">
             <div class="col-md-6">
-                <div class="glass-card text-center border-warning">
-                    <div class="card-class">الصف الأول الثانوي لغات</div>
-                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الاثنين 11 / 5 / 2026</div>
-                    <div class="card-time"><i class="far fa-clock me-2"></i> 8:00 PM</div>
-                    <p class="text-warning mt-2 fw-bold">مراجعة منصة + مراجعة برمجة</p>
-                    <a href="https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                <div class="glass-card text-center">
+                    <div class="card-class">Secondary 1</div>
+                    <div class="card-date">الاثنين 11 مايو - 8:00 PM</div>
+                    <a id="link-s1" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
         </div>
@@ -453,15 +253,72 @@
         <p>© 2026 ICT Final Revision - Designed by Mr. Mahmoud Saeed</p>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Toggle Help Function
-        function toggleHelp() {
-            const overlay = document.getElementById('helpOverlay');
-            overlay.style.display = (overlay.style.display === 'flex') ? 'none' : 'flex';
+        // System Config
+        const classConfig = [
+            { id: 'link-g4', name: 'الصف الرابع الابتدائي' },
+            { id: 'link-g5', name: 'الصف الخامس الابتدائي' },
+            { id: 'link-g6', name: 'الصف السادس الابتدائي' },
+            { id: 'link-p1', name: 'الصف الأول الإعدادي' },
+            { id: 'link-p2', name: 'الصف الثاني الإعدادي' },
+            { id: 'link-p3', name: 'الصف الثالث الإعدادي' },
+            { id: 'link-s1', name: 'الصف الأول الثانوي' }
+        ];
+
+        // Load States
+        let lectureStates = JSON.parse(localStorage.getItem('ict_lecture_states')) || {};
+        classConfig.forEach(c => { if(lectureStates[c.id] === undefined) lectureStates[c.id] = true; });
+
+        function updateUI() {
+            classConfig.forEach(c => {
+                const btn = document.getElementById(c.id);
+                if(lectureStates[c.id]) {
+                    btn.classList.remove('btn-inactive');
+                    btn.innerHTML = 'انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i>';
+                } else {
+                    btn.classList.add('btn-inactive');
+                    btn.innerHTML = 'المحاضرة مغلقة حالياً';
+                }
+            });
+            localStorage.setItem('ict_lecture_states', JSON.stringify(lectureStates));
         }
 
-        // Background Animation
+        function askAdminPass() {
+            const pass = prompt("برجاء إدخال كلمة المرور للتحكم:");
+            if (pass === "121212@Ms") {
+                renderAdminPanel();
+                showModal('adminModal');
+            } else if (pass !== null) {
+                alert("كلمة المرور غير صحيحة!");
+            }
+        }
+
+        function renderAdminPanel() {
+            const list = document.getElementById('adminList');
+            list.innerHTML = '';
+            classConfig.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'admin-item';
+                div.innerHTML = `
+                    <span>${c.name}</span>
+                    <label class="switch">
+                        <input type="checkbox" ${lectureStates[c.id] ? 'checked' : ''} onchange="toggleLecture('${c.id}')">
+                        <span class="slider"></span>
+                    </label>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function toggleLecture(id) {
+            lectureStates[id] = !lectureStates[id];
+            updateUI();
+        }
+
+        function showModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function hideModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Background Particles
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -469,39 +326,22 @@
         class Particle {
             constructor() { this.reset(); }
             reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 1;
-                this.speedX = Math.random() * 1 - 0.5;
-                this.speedY = Math.random() * 1 - 0.5;
-                this.color = Math.random() > 0.5 ? '#00f2ff' : '#bc13fe';
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1; this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25; this.color = Math.random() > 0.5 ? '#00f2ff' : '#bc13fe';
             }
-            update() {
-                this.x += this.speedX; this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
-            }
-            draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+            update() { this.x += this.speedX; this.y += this.speedY; if (this.x<0 || this.x>canvas.width || this.y<0 || this.y>canvas.height) this.reset(); }
+            draw() { ctx.fillStyle = this.color; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
         }
-        function createParticles() { for (let i = 0; i < 100; i++) particles.push(new Particle()); }
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(p => { p.update(); p.draw(); });
-            requestAnimationFrame(animate);
-        }
-        window.addEventListener('resize', initCanvas);
-        initCanvas(); createParticles(); animate();
-
-        // Card Hover Effect
-        $('.glass-card').on('mousemove', function(e) {
-            const card = $(this); const offset = card.offset();
-            const relX = e.pageX - offset.left; const relY = e.pageY - offset.top;
-            const width = card.width(); const height = card.height();
-            const moveX = (relX - width/2) / (width/2) * 10;
-            const moveY = (relY - height/2) / (height/2) * -10;
-            card.css('transform', `perspective(1000px) rotateY(${moveX}deg) rotateX(${moveY}deg) scale(1.05)`);
-        }).on('mouseleave', function() {
-            $(this).css('transform', 'perspective(1000px) rotateY(0) rotateX(0) scale(1)');
-        });
+        function animate() { ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        
+        window.onload = () => { 
+            initCanvas(); 
+            for(let i=0; i<80; i++) particles.push(new Particle()); 
+            animate(); 
+            updateUI(); 
+        };
+        window.onresize = initCanvas;
     </script>
 </body>
 </html>
