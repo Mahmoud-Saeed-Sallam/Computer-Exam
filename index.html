@@ -1,80 +1,451 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> ICT - Quiz - Eng. Mahmoud Saeed</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-    <link rel="icon" type="image/png" href="my_photo.png">
-
+    <title>ICT Online Final Revision | مستر محمود سعيد</title>
     
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --neon-cyan: #00f2ff;
+            --neon-purple: #bc13fe;
+            --neon-blue: #0044ff;
+            --neon-orange: #ff8800;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #0a0a2e 0%, #000000 100%);
+        }
+
+        .floating-icons {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .tech-icon {
+            position: absolute;
+            color: var(--neon-cyan);
+            filter: drop-shadow(0 0 10px var(--neon-cyan));
+            animation: float 10s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-40px) rotate(20deg); }
+        }
+
+        .hero {
+            padding: 100px 20px;
+            text-align: center;
+            perspective: 1000px;
+        }
+
+        .main-title {
+            font-size: 5rem;
+            font-weight: 900;
+            color: var(--neon-cyan);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+            transform: rotateX(15deg);
+            text-shadow: 0 0 20px rgba(0, 242, 255, 0.7), 
+                         0 0 40px rgba(0, 242, 255, 0.3);
+            animation: titleGlow 3s infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 0 20px var(--neon-cyan); }
+            to { text-shadow: 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-blue); }
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .teacher-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 40px;
+            margin: 50px auto;
+            max-width: 800px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+
+        .teacher-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(transparent, transparent, var(--neon-cyan), transparent);
+            animation: rotateBorder 6s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotateBorder {
+            100% { transform: rotate(360deg); }
+        }
+
+        .teacher-card-inner {
+            background: #0d0d0d;
+            border-radius: 25px;
+            padding: 30px;
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 5px solid var(--neon-cyan);
+            box-shadow: 0 0 30px var(--neon-cyan);
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        .stage-title {
+            color: var(--neon-orange);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 60px 0 30px;
+            text-align: center;
+            text-shadow: 0 0 10px var(--neon-orange);
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 25px;
+            height: 100%;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) rotateY(5deg);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+        }
+
+        .card-class { color: var(--neon-cyan); font-weight: 900; font-size: 1.4rem; }
+        .card-date { color: #ccc; font-size: 1rem; margin: 10px 0; }
+        .card-time { font-weight: bold; color: #fff; }
+
+        .btn-neon {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+            text-transform: uppercase;
+            position: relative;
+        }
+
+        .btn-cyan {
+            background: var(--neon-cyan);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        .btn-cyan:hover {
+            box-shadow: 0 0 30px var(--neon-cyan);
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+            box-shadow: 0 0 15px #25d366;
+            margin: 10px;
+        }
+
+        .btn-teams {
+            background: #464eb8;
+            color: white;
+            box-shadow: 0 0 20px #464eb8;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .teams-download {
+            background: rgba(70, 78, 184, 0.1);
+            border: 2px dashed #464eb8;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        footer {
+            padding: 40px;
+            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            margin-top: 80px;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .main-title { font-size: 2.5rem; }
+            .subtitle { font-size: 1.2rem; }
+        }
+    </style>
 </head>
 <body>
-    <nav id="sectionNav" class="bg-dark text-white p-2 text-center" style="position: sticky; top: 0; z-index: 9999; display: none;">
-    <div class="container d-flex justify-content-center gap-2 flex-wrap">
-        <a href="#sec1" class="btn btn-sm btn-outline-light">A-True or False</a>
-        <a href="#sec2" class="btn btn-sm btn-outline-light">B- Multiple Choice </a>
-        <a href="#sec3" class="btn btn-sm btn-outline-light">C- Complete</a>
-        <a href="#sec4" class="btn btn-sm btn-outline-light">D- ODD word </a>
-        <a href="#sec5" class="btn btn-sm btn-outline-light">E- Match</a>
-    </div>
-</nav>
 
-    <!-- <div id="timerContainer" style="position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 30px; z-index: 10000; display: none; border: 2px solid #0984e3;">
-    <span id="timer" style="font-weight: bold; font-size: 1.2rem;">00:00</span>
-    <span style="margin: 0 10px; color: #0984e3;">|</span>
-    <span id="questionCounter" style="font-size: 1rem;">Progress: 0 / 100</span>
-</div> -->
-<!-- <div id="timerContainer" style="position: fixed; width: fit-content; top: 10px; right: 10px; cursor: move; background: rgba(0,0,0,0.85); color: white; padding: 5px 12px; border-radius: 50px; z-index: 10001; display: none; border: 1.5px solid #0984e3; font-size: 10px;">
-    <div class="d-flex align-items-center gap-2">
-    <span id="timer" class="fw-bold">00:00</span>
-    <span id="questionCounter" style="font-size: 11px; opacity: 0.8;">0/100</span>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="floating-icons">
+        <i class="fas fa-robot tech-icon" style="top: 10%; left: 5%; font-size: 3rem;"></i>
+        <i class="fas fa-code tech-icon" style="top: 40%; right: 8%; font-size: 2rem;"></i>
+        <i class="fas fa-microchip tech-icon" style="bottom: 15%; left: 10%; font-size: 4rem;"></i>
+        <i class="fas fa-laptop-code tech-icon" style="top: 20%; right: 15%; font-size: 2.5rem;"></i>
+        <i class="fas fa-brain tech-icon" style="bottom: 30%; right: 5%; font-size: 3rem;"></i>
     </div>
-</div> -->
-<div id="timerContainer" class="shadow-lg" style="position: fixed; top: 60px; right: 20px; cursor: move; background: rgba(0,0,0,0.85); color: white; padding: 5px 12px; border-radius: 30px; z-index: 10001; display: none; border: 1px solid #0984e3; font-size: 13px; width: fit-content; white-space: nowrap;">
-    <div class="d-flex align-items-center gap-2">
-        <span id="timer" class="fw-bold">00:00</span>
-        <span id="questionCounter" style="font-size: 11px; opacity: 0.8;">0/100</span>
-    </div>
-</div>
-    <div id="welcomeScreen" class="container text-center mt-5">
-        <div class="hero-section">
-            <img src="my_photo.png" alt="Eng. Mahmoud Saeed" class="profile-img">
-            <h1 class="display-4 fw-bold text-white">ICT - 1st. Quiz </h1>
-            <h2 class="text-info mb-4">Prim 4 - Second Term ( Lessons 1,2,3,4 )</h2>
-             <div class="form-group mb-4 text-start">
-        <label for="studentName" class="fw-bold mb-2">Student's Full Name (Triple):</label>
-        <input type="text" id="studentName" class="form-control form-control-lg" placeholder="Enter your name here..." required>
-    </div>
-            <hr>
-            <div class="info-badge mb-3">Instructor: Eng. Mahmoud Saeed</div>
-            <p class="h5 text-light mb-4">IT Specialist - 01020281736</p>
-            <button id="startBtn" class="btn btn-start btn-lg pulse-button">Start Interactive Exam 🚀</button>
+
+    <!-- Header / Hero Section -->
+    <header class="hero container">
+        <h1 class="main-title">ICT ONLINE REVISION</h1>
+        <p class="subtitle">Programming • Computer • Artificial Intelligence</p>
+        
+        <div class="row justify-content-center mt-5">
+            <div class="col-6 col-md-2 mb-3">
+                <div class="glass-card py-3">
+                    <i class="fas fa-user-robot fa-2x mb-2 text-info"></i>
+                    <h6>AI</h6>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 mb-3">
+                <div class="glass-card py-3">
+                    <i class="fas fa-terminal fa-2x mb-2 text-warning"></i>
+                    <h6>برمجة</h6>
+                </div>
+            </div>
+            <div class="col-6 col-md-2 mb-3">
+                <div class="glass-card py-3">
+                    <i class="fas fa-desktop fa-2x mb-2 text-primary"></i>
+                    <h6>كمبيوتر</h6>
+                </div>
+            </div>
         </div>
-    </div>
+    </header>
 
-    <div id="examContainer" class="container mt-4" style="display:none;">
-        <div id="questionsContent"></div>
-        <div class="text-center my-5">
-            <button type="button" id="submitBtn" class="btn btn-start btn-lg pulse-button">Submit & Show Results 🏁</button>
+    <!-- Teacher Section -->
+    <section class="container">
+        <div class="teacher-card">
+            <div class="teacher-card-inner text-center">
+                <img src="mahmod-saeed.jpg" alt="محمود سعيد" class="profile-img">
+                <h2 class="fw-bold mb-3">مستر محمود سعيد</h2>
+                <p class="px-md-5 opacity-75">
+                    مراجعات نهائية احترافية لمادة الـ ICT، والبرمجة، والذكاء الاصطناعي مع شرح مبسط وحل للامتحانات.
+                </p>
+                <div class="mt-4">
+                    <a href="https://wa.me/201020281736" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-2"></i> 01020281736</a>
+                    <a href="https://wa.me/201151751846" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-2"></i> 01151751846</a>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div id="reviewContainer" class="container mt-4" style="display:none;">
-        <div class="section-header bg-warning text-dark"><h3>Exam Review - مراجعة الأخطاء</h3></div>
-        <div id="reviewContent"></div>
-        <div class="text-center my-5">
-            <button class="btn btn-primary btn-lg" onclick="location.reload()">Back to Main Page 🏠</button>
+    <!-- Teams Section -->
+    <section class="container">
+        <div class="teams-download">
+            <h4 class="mb-4">📥 حمل تطبيق Microsoft Teams للدخول للمراجعات</h4>
+            <a href="https://play.google.com/store/apps/details?id=com.microsoft.teams" target="_blank" class="btn btn-neon btn-teams px-5 py-3">
+                <i class="fab fa-google-play me-2"></i> Google Play تحميل من 
+            </a>
         </div>
-    </div>
+    </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-    <script src="script.js"></script>
+    <!-- Main Revision Content -->
+    <main class="container mb-5">
+        
+        <h2 class="stage-title">المرحلة الابتدائية</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <div class="card-class">الصف الرابع الابتدائي لغات</div>
+                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الأحد 10 / 5 / 2026</div>
+                    <div class="card-time"><i class="far fa-clock me-2"></i> 5:00 PM</div>
+                    <a href="https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <div class="card-class">الصف الخامس الابتدائي لغات</div>
+                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الاثنين 11 / 5 / 2026</div>
+                    <div class="card-time"><i class="far fa-clock me-2"></i> 6:30 PM</div>
+                    <a href="https://teams.microsoft.com/meet/32769944984304?p=jfsTJj6dLPYjtxlJ2s" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <div class="card-class">الصف السادس الابتدائي لغات</div>
+                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الأحد 10 / 5 / 2026</div>
+                    <div class="card-time"><i class="far fa-clock me-2"></i> 6:30 PM</div>
+                    <a href="https://teams.microsoft.com/meet/32769944984304?p=jfsTJj6dLPYjtxlJ2s" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="stage-title">المرحلة الإعدادية</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <div class="card-class">الصف الأول الإعدادي لغات</div>
+                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الثلاثاء 12 / 5 / 2026</div>
+                    <div class="card-time"><i class="far fa-clock me-2"></i> 6:00 PM</div>
+                    <a href="https://teams.microsoft.com/meet/34507374067784?p=B8SV6XrdZzfD05TxFx" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <div class="card-class">الصف الثاني الإعدادي لغات</div>
+                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الأحد 10 / 5 / 2026</div>
+                    <div class="card-time"><i class="far fa-clock me-2"></i> 8:00 PM</div>
+                    <a href="https://teams.microsoft.com/meet/39650350947333?p=gO3QEZc2RNmRvUxGLR" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card text-center">
+                    <div class="card-class">الصف الثالث الإعدادي لغات</div>
+                    <div class="card-date">
+                        <i class="far fa-calendar-alt me-1"></i> 13 / 5 (الأربعاء)<br>
+                        <i class="far fa-calendar-alt me-1"></i> 14 / 5 (الخميس)
+                    </div>
+                    <div class="card-time"><i class="far fa-clock me-2"></i> 7:30 PM</div>
+                    <a href="https://teams.microsoft.com/meet/39650350947333?p=gO3QEZc2RNmRvUxGLR" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="stage-title">المرحلة الثانوية</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-6">
+                <div class="glass-card text-center border-warning">
+                    <div class="card-class">الصف الأول الثانوي لغات</div>
+                    <div class="card-date"><i class="far fa-calendar-alt me-2"></i>الاثنين 11 / 5 / 2026</div>
+                    <div class="card-time"><i class="far fa-clock me-2"></i> 8:00 PM</div>
+                    <p class="text-warning mt-2 fw-bold">مراجعة منصة + مراجعة برمجة</p>
+                    <a href="https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100">انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i></a>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>© 2026 ICT Final Revision - Developed with Tech Future Style</p>
+        <p>جميع الحقوق محفوظة لمستر محمود سعيد</p>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 1 - 0.5;
+                this.speedY = Math.random() * 1 - 0.5;
+                this.color = Math.random() > 0.5 ? '#00f2ff' : '#bc13fe';
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            for (let i = 0; i < 100; i++) particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        createParticles();
+        animate();
+
+        $('.glass-card').on('mousemove', function(e) {
+            const card = $(this);
+            const offset = card.offset();
+            const relX = e.pageX - offset.left;
+            const relY = e.pageY - offset.top;
+            const width = card.width();
+            const height = card.height();
+            const moveX = (relX - width/2) / (width/2) * 10;
+            const moveY = (relY - height/2) / (height/2) * -10;
+            card.css('transform', `perspective(1000px) rotateY(${moveX}deg) rotateX(${moveY}deg) scale(1.05)`);
+        }).on('mouseleave', function() {
+            $(this).css('transform', 'perspective(1000px) rotateY(0) rotateX(0) scale(1)');
+        });
+    </script>
 </body>
 </html>
