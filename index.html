@@ -60,6 +60,7 @@
             50% { transform: translateY(-40px) rotate(20deg); }
         }
 
+        /* Hero Section */
         .hero {
             padding: 100px 20px;
             text-align: center;
@@ -93,6 +94,7 @@
             margin-bottom: 40px;
         }
 
+        /* Teacher Card */
         .teacher-card {
             background: var(--glass-bg);
             backdrop-filter: blur(15px);
@@ -116,9 +118,7 @@
             z-index: -1;
         }
 
-        @keyframes rotateBorder {
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes rotateBorder { 100% { transform: rotate(360deg); } }
 
         .teacher-card-inner {
             background: #0d0d0d;
@@ -136,6 +136,7 @@
             object-fit: cover;
         }
 
+        /* Utility Cards */
         .stage-title {
             color: var(--neon-orange);
             font-size: 2.5rem;
@@ -167,6 +168,7 @@
         .card-date { color: #ccc; font-size: 1rem; margin: 10px 0; }
         .card-time { font-weight: bold; color: #fff; }
 
+        /* Buttons */
         .btn-neon {
             border: none;
             border-radius: 10px;
@@ -177,7 +179,6 @@
             display: inline-block;
             margin-top: 15px;
             text-transform: uppercase;
-            position: relative;
         }
 
         .btn-cyan {
@@ -189,7 +190,6 @@
         .btn-cyan:hover {
             box-shadow: 0 0 30px var(--neon-cyan);
             background: #fff;
-            color: #000;
         }
 
         .btn-whatsapp {
@@ -207,19 +207,84 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
+            0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
         }
 
-        .teams-download {
-            background: rgba(70, 78, 184, 0.1);
-            border: 2px dashed #464eb8;
+        /* New: Floating Help Button & Modal */
+        .side-help-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 40px;
+            z-index: 999;
+            width: 60px;
+            height: 60px;
+            background: var(--neon-purple);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 20px var(--neon-purple);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .side-help-btn:hover {
+            transform: scale(1.1) rotate(360deg);
+            background: #fff;
+            color: var(--neon-purple);
+        }
+
+        .help-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .help-content {
+            background: #0d0d0d;
+            border: 2px solid var(--neon-purple);
             border-radius: 20px;
             padding: 30px;
-            margin: 40px auto;
-            max-width: 600px;
-            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 0 40px var(--neon-purple);
+        }
+
+        .close-help {
+            position: absolute;
+            top: 15px; left: 15px;
+            color: #ff4444;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .help-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .help-item i {
+            color: var(--neon-cyan);
+            margin-left: 15px;
+            font-size: 1.5rem;
+            margin-top: 5px;
+        }
+
+        .highlight-text {
+            color: var(--neon-orange);
+            font-weight: bold;
+            text-decoration: underline;
         }
 
         footer {
@@ -240,6 +305,44 @@
 
     <canvas id="bg-canvas"></canvas>
 
+    <!-- Floating Help Button -->
+    <button class="side-help-btn" onclick="toggleHelp()">
+        <i class="fas fa-question"></i>
+    </button>
+
+    <!-- Help Modal -->
+    <div class="help-overlay" id="helpOverlay">
+        <div class="help-content text-right">
+            <span class="close-help" onclick="toggleHelp()"><i class="fas fa-times"></i></span>
+            <h4 class="text-center mb-4" style="color:var(--neon-purple)">💡 تعليمات الدخول للمحاضرة</h4>
+            
+            <div class="help-item">
+                <i class="fas fa-download"></i>
+                <div>تأكد من تحميل تطبيق <span class="text-info">Microsoft Teams</span> على جهازك.</div>
+            </div>
+            
+            <div class="help-item">
+                <i class="fas fa-user-edit"></i>
+                <div>
+                    <span class="highlight-text">تنبيه هام جداً:</span> 
+                    يجب كتابة <span class="text-white">اسم الطالب ثلاثياً</span> باللغة العربية عند الدخول، يمنع تماماً الدخول بأسماء أولياء الأمور.
+                </div>
+            </div>
+            
+            <div class="help-item">
+                <i class="fas fa-hourglass-start"></i>
+                <div>بعد الضغط على رابط الصف الخاص بك، انتظر حتى يقوم المحاضر بالموافقة على انضمامك.</div>
+            </div>
+
+            <div class="help-item">
+                <i class="fas fa-check-circle"></i>
+                <div>بالتوفيق لجميع الطلاب - مستر محمود سعيد</div>
+            </div>
+
+            <button class="btn btn-neon btn-cyan w-100 mt-3" onclick="toggleHelp()">فهمت ذلك</button>
+        </div>
+    </div>
+
     <div class="floating-icons">
         <i class="fas fa-robot tech-icon" style="top: 10%; left: 5%; font-size: 3rem;"></i>
         <i class="fas fa-code tech-icon" style="top: 40%; right: 8%; font-size: 2rem;"></i>
@@ -248,31 +351,10 @@
         <i class="fas fa-brain tech-icon" style="bottom: 30%; right: 5%; font-size: 3rem;"></i>
     </div>
 
-    <!-- Header / Hero Section -->
+    <!-- Hero Section -->
     <header class="hero container">
         <h1 class="main-title">ICT ONLINE REVISION</h1>
         <p class="subtitle">Programming • Computer • Artificial Intelligence</p>
-        
-        <div class="row justify-content-center mt-5">
-            <div class="col-6 col-md-2 mb-3">
-                <div class="glass-card py-3">
-                    <i class="fas fa-user-robot fa-2x mb-2 text-info"></i>
-                    <h6>AI</h6>
-                </div>
-            </div>
-            <div class="col-6 col-md-2 mb-3">
-                <div class="glass-card py-3">
-                    <i class="fas fa-terminal fa-2x mb-2 text-warning"></i>
-                    <h6>برمجة</h6>
-                </div>
-            </div>
-            <div class="col-6 col-md-2 mb-3">
-                <div class="glass-card py-3">
-                    <i class="fas fa-desktop fa-2x mb-2 text-primary"></i>
-                    <h6>كمبيوتر</h6>
-                </div>
-            </div>
-        </div>
     </header>
 
     <!-- Teacher Section -->
@@ -292,19 +374,8 @@
         </div>
     </section>
 
-    <!-- Teams Section -->
-    <section class="container">
-        <div class="teams-download">
-            <h4 class="mb-4">📥 حمل تطبيق Microsoft Teams للدخول للمراجعات</h4>
-            <a href="https://play.google.com/store/apps/details?id=com.microsoft.teams" target="_blank" class="btn btn-neon btn-teams px-5 py-3">
-                <i class="fab fa-google-play me-2"></i> Google Play تحميل من 
-            </a>
-        </div>
-    </section>
-
-    <!-- Main Revision Content -->
+    <!-- Main Content (Same as before but with target="_blank") -->
     <main class="container mb-5">
-        
         <h2 class="stage-title">المرحلة الابتدائية</h2>
         <div class="row g-4">
             <div class="col-md-4">
@@ -376,25 +447,25 @@
                 </div>
             </div>
         </div>
-
     </main>
 
     <footer>
-        <p>© 2026 ICT Final Revision - Developed with Tech Future Style</p>
-        <p>جميع الحقوق محفوظة لمستر محمود سعيد</p>
+        <p>© 2026 ICT Final Revision - Designed by Mr. Mahmoud Saeed</p>
     </footer>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        // Toggle Help Function
+        function toggleHelp() {
+            const overlay = document.getElementById('helpOverlay');
+            overlay.style.display = (overlay.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        // Background Animation
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-
+        function initCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         class Particle {
             constructor() { this.reset(); }
             reset() {
@@ -406,40 +477,25 @@
                 this.color = Math.random() > 0.5 ? '#00f2ff' : '#bc13fe';
             }
             update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
+                this.x += this.speedX; this.y += this.speedY;
                 if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
             }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
+            draw() { ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
         }
-
-        function createParticles() {
-            for (let i = 0; i < 100; i++) particles.push(new Particle());
-        }
-
+        function createParticles() { for (let i = 0; i < 100; i++) particles.push(new Particle()); }
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animate);
         }
-
         window.addEventListener('resize', initCanvas);
-        initCanvas();
-        createParticles();
-        animate();
+        initCanvas(); createParticles(); animate();
 
+        // Card Hover Effect
         $('.glass-card').on('mousemove', function(e) {
-            const card = $(this);
-            const offset = card.offset();
-            const relX = e.pageX - offset.left;
-            const relY = e.pageY - offset.top;
-            const width = card.width();
-            const height = card.height();
+            const card = $(this); const offset = card.offset();
+            const relX = e.pageX - offset.left; const relY = e.pageY - offset.top;
+            const width = card.width(); const height = card.height();
             const moveX = (relX - width/2) / (width/2) * 10;
             const moveY = (relY - height/2) / (height/2) * -10;
             card.css('transform', `perspective(1000px) rotateY(${moveX}deg) rotateX(${moveY}deg) scale(1.05)`);
