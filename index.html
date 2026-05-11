@@ -37,16 +37,19 @@
         .stage-title { color: var(--neon-orange); font-size: 2.2rem; font-weight: 700; margin: 50px 0 25px; text-align: center; }
         .glass-card { background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; height: 100%; transition: 0.3s; position: relative; }
         .card-class { color: var(--neon-cyan); font-weight: 800; font-size: 1.2rem; }
+        .status-badge { font-size: 0.8rem; padding: 4px 10px; border-radius: 50px; margin-top: 10px; display: inline-block; }
+        .status-expired { background: rgba(255, 68, 68, 0.2); color: #ff4444; border: 1px solid #ff4444; }
 
         /* Buttons & Inactive State */
         .btn-neon { border-radius: 10px; padding: 12px 20px; font-weight: bold; text-decoration: none; display: inline-block; transition: 0.3s; border: none; }
         .btn-cyan { background: var(--neon-cyan); color: #000; box-shadow: 0 0 15px var(--neon-cyan); }
         .btn-inactive { background: #333 !important; color: #777 !important; cursor: not-allowed !important; box-shadow: none !important; transform: none !important; pointer-events: none; }
         .btn-whatsapp { background: #25d366; color: white; margin: 5px; }
+        .btn-teams { background: #4654a3; color: white; box-shadow: 0 0 10px #4654a3; }
 
         /* Modals & Overlays */
         .custom-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 2000; justify-content: center; align-items: center; }
-        .custom-modal { background: #0d0d0d; border: 2px solid var(--neon-cyan); border-radius: 25px; padding: 30px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); }
+        .custom-modal { background: #0d0d0d; border: 2px solid var(--neon-cyan); border-radius: 25px; padding: 30px; width: 90%; max-width: 500px; position: relative; box-shadow: 0 0 40px rgba(0, 242, 255, 0.2); overflow-y: auto; max-height: 90vh; }
 
         /* Admin Controls */
         .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #222; }
@@ -80,88 +83,29 @@
     </button>
 
     <!-- Help Modal -->
-    <!-- <div class="custom-overlay" id="helpModal">
+    <div class="custom-overlay" id="helpModal">
         <div class="custom-modal">
             <h4 class="text-center mb-4" style="color:var(--neon-purple)">💡 قواعد وتعليمات المحاضرة</h4>
-            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i>الالتزام بـ <b>الاستئذان</b> قبل التحدث أو طرح سؤال.</div>
-            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i><b>التركيز جيدا</b> أثناء الشرح وتدوين الملاحظات الهامة.</div>
-            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i>الدخول بـ <b>الاسم الثلاثي باللغة العربية</b> لضمان تسجيل الحضور.</div>
-            <div class="mb-3"><i class="fas fa-check-circle text-info me-2"></i>غلق المايكروفون فور الدخول وعدم فتحه إلا عند الضرورة.</div>
-            <div class="mb-4"><i class="fas fa-check-circle text-info me-2"></i>احترام الزملاء والمحاضر لضمان أقصى استفادة للجميع.</div>
-            <button class="btn btn-neon btn-cyan w-100" onclick="hideModal('helpModal')">فهمت ذلك</button>
+            <div class="mb-3">
+                <i class="fas fa-download text-primary me-2"></i>
+                <b style="color:var(--neon-cyan)">تطبيق Teams:</b> يجب تحميل التطبيق أولاً.
+                <a href="https://play.google.com/store/apps/details?id=com.microsoft.teams" target="_blank" class="btn btn-neon btn-teams w-100 mt-2 py-1">
+                    <i class="fab fa-google-play me-1"></i> تحميل تطبيق Teams
+                </a>
+            </div>
+            <div class="mb-3"><i class="fas fa-link text-success me-2"></i><b>طريقة الدخول:</b> اضغط "انضم للمحاضرة" ثم اختر "Join Meeting" وانتظر القبول.</div>
+            <div class="mb-3"><i class="fas fa-user text-info me-2"></i>الدخول بـ <b>الاسم الثلاثي باللغة العربية</b>.</div>
+            <div class="mb-3"><i class="fas fa-microphone-slash text-danger me-2"></i>غلق المايكروفون فور الدخول.</div>
+            <div class="mb-3"><i class="fas fa-clock text-warning me-2"></i>يفضل الدخول قبل الموعد بـ <b>5 دقائق</b>.</div>
+            <button class="btn btn-neon btn-cyan w-100 mt-3" onclick="hideModal('helpModal')">فهمت ذلك</button>
         </div>
-    </div> -->
-    <!-- Help Modal -->
-<div class="custom-overlay" id="helpModal">
-    <div class="custom-modal">
-        
-        <h4 class="text-center mb-4" style="color:var(--neon-purple)">
-            💡 قواعد وتعليمات المحاضرة
-        </h4>
-
-        <div class="mb-3">
-            <i class="fas fa-link text-success me-2"></i>
-            <b style="color:#00e5ff">طريقة الدخول:</b>
-            الضغط على رابط المحاضرة عبر تطبيق <b>Microsoft Teams</b> ثم اختيار "Join Meeting" والانتظار حتى السماح بالدخول.
-        </div>
-
-        <div class="mb-3">
-            <i class="fas fa-check-circle text-info me-2"></i>
-            الالتزام بـ <b>الاستئذان</b> قبل التحدث أو طرح سؤال.
-        </div>
-
-        <div class="mb-3">
-            <i class="fas fa-book text-warning me-2"></i>
-            <b>التركيز جيدا</b> أثناء الشرح وتدوين الملاحظات الهامة.
-        </div>
-
-        <div class="mb-3">
-            <i class="fas fa-user text-info me-2"></i>
-            الدخول بـ <b>الاسم الثلاثي باللغة العربية</b> لضمان تسجيل الحضور.
-        </div>
-
-        <div class="mb-3">
-            <i class="fas fa-microphone-slash text-danger me-2"></i>
-            غلق المايكروفون فور الدخول وعدم فتحه إلا عند الضرورة.
-        </div>
-
-        <div class="mb-3">
-            <i class="fas fa-users text-primary me-2"></i>
-            احترام الزملاء والمحاضر لضمان أقصى استفادة للجميع.
-        </div>
-
-        <!-- تعليمات إضافية -->
-        <hr style="border-color:#444">
-
-        <div class="mb-3">
-            <i class="fas fa-clock text-warning me-2"></i>
-            يفضل الدخول قبل موعد المحاضرة بـ <b>5 دقائق</b>.
-        </div>
-
-        <div class="mb-3">
-            <i class="fas fa-wifi text-info me-2"></i>
-            التأكد من <b>ثبات الإنترنت</b> قبل بدء المحاضرة.
-        </div>
-
-        <div class="mb-4">
-            <i class="fas fa-ban text-danger me-2"></i>
-            يمنع مشاركة رابط المحاضرة مع أي شخص غير مسجل.
-        </div>
-
-        <button class="btn btn-neon btn-cyan w-100" onclick="hideModal('helpModal')">
-            فهمت ذلك
-        </button>
-
     </div>
-</div>
 
     <!-- Admin Panel Modal -->
     <div class="custom-overlay" id="adminModal">
         <div class="custom-modal">
             <h4 class="text-center mb-4" style="color:var(--neon-cyan)">⚙️ لوحة تحكم المحاضرات</h4>
-            <div id="adminList">
-                <!-- Items populated by JS -->
-            </div>
+            <div id="adminList"></div>
             <button class="btn btn-secondary w-100 mt-4" onclick="hideModal('adminModal')">إغلاق اللوحة</button>
         </div>
     </div>
@@ -170,6 +114,9 @@
     <header class="hero container">
         <h1 class="main-title">ICT REVISION</h1>
         <p class="subtitle">Mr. Mahmoud Saeed | Final Revision 2026</p>
+         <!-- <a href="https://play.google.com/store/apps/details?id=com.microsoft.teams" target="_blank" class="btn btn-neon btn-teams w-100 mt-2 py-1">
+                    <i class="fab fa-google-play me-1"></i> تحميل تطبيق Teams
+                </a> -->
     </header>
 
     <!-- Teacher -->
@@ -182,6 +129,9 @@
                 <a href="https://wa.me/201020281736" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-1"></i> 01020281736</a>
                 <a href="https://wa.me/201151751846" target="_blank" class="btn btn-neon btn-whatsapp"><i class="fab fa-whatsapp me-1"></i> 01151751846</a>
             </div>
+            <a href="https://play.google.com/store/apps/details?id=com.microsoft.teams" target="_blank" class="btn btn-neon btn-teams w-100 mt-2 py-1">
+                    <i class="fab fa-google-play me-1"></i> تحميل تطبيق Teams
+                </a>
         </div>
     </section>
 
@@ -193,21 +143,24 @@
                 <div class="glass-card text-center">
                     <div class="card-class">Primary 4</div>
                     <div class="card-date">الأحد 10 مايو - 5:00 PM</div>
-                    <a id="link-g4" https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
+                    <div id="status-link-g4"></div>
+                    <a id="link-g4" href="https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
                     <div class="card-class">Primary 5</div>
                     <div class="card-date">الاثنين 11 مايو - 6:30 PM</div>
-                    <a id="link-g5" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
+                    <div id="status-link-g5"></div>
+                    <a id="link-g5" href="https://teams.microsoft.com/meet/32769944984304?p=jfsTJj6dLPYjtxlJ2s" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
                     <div class="card-class">Primary 6</div>
                     <div class="card-date">الأحد 10 مايو - 6:30 PM</div>
-                    <a id="link-g6" href="https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
+                    <div id="status-link-g6"></div>
+                    <a id="link-g6" href="https://teams.microsoft.com/meet/32769944984304?p=jfsTJj6dLPYjtxlJ2s" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
         </div>
@@ -218,21 +171,24 @@
                 <div class="glass-card text-center">
                     <div class="card-class">Prep 1</div>
                     <div class="card-date">الثلاثاء 12 مايو - 6:00 PM</div>
-                    <a id="link-p1" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
+                    <div id="status-link-p1"></div>
+                    <a id="link-p1" href="https://teams.microsoft.com/meet/34507374067784?p=B8SV6XrdZzfD05TxFx" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
                     <div class="card-class">Prep 2</div>
                     <div class="card-date">الأحد 10 مايو - 8:00 PM</div>
-                    <a id="link-p2" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
+                    <div id="status-link-p2"></div>
+                    <a id="link-p2" href="https://teams.microsoft.com/meet/39650350947333?p=gO3QEZc2RNmRvUxGLR" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="glass-card text-center">
                     <div class="card-class">Prep 3</div>
                     <div class="card-date">الأربعاء والخميس - 7:30 PM</div>
-                    <a id="link-p3" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
+                    <div id="status-link-p3"></div>
+                    <a id="link-p3" href="https://teams.microsoft.com/meet/39650350947333?p=gO3QEZc2RNmRvUxGLR" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
         </div>
@@ -243,7 +199,8 @@
                 <div class="glass-card text-center">
                     <div class="card-class">Secondary 1</div>
                     <div class="card-date">الاثنين 11 مايو - 8:00 PM</div>
-                    <a id="link-s1" href="https://teams.microsoft.com/..." target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
+                    <div id="status-link-s1"></div>
+                    <a id="link-s1" href="https://teams.microsoft.com/meet/31161264349456?p=4LdI8UndR6RoZ2dgNj" target="_blank" class="btn btn-neon btn-cyan w-100 mt-3">انضم للمحاضرة</a>
                 </div>
             </div>
         </div>
@@ -254,30 +211,39 @@
     </footer>
 
     <script>
-        // System Config
+        // System Config with Expiry Dates (Year, Month[0-11], Day, Hour, Minute)
         const classConfig = [
-            { id: 'link-g4', name: 'الصف الرابع الابتدائي' },
-            { id: 'link-g5', name: 'الصف الخامس الابتدائي' },
-            { id: 'link-g6', name: 'الصف السادس الابتدائي' },
-            { id: 'link-p1', name: 'الصف الأول الإعدادي' },
-            { id: 'link-p2', name: 'الصف الثاني الإعدادي' },
-            { id: 'link-p3', name: 'الصف الثالث الإعدادي' },
-            { id: 'link-s1', name: 'الصف الأول الثانوي' }
+            { id: 'link-g4', name: 'الصف الرابع الابتدائي', expiry: new Date(2026, 4, 10, 19, 0) },
+            { id: 'link-g5', name: 'الصف الخامس الابتدائي', expiry: new Date(2026, 4, 11, 20, 30) },
+            { id: 'link-g6', name: 'الصف السادس الابتدائي', expiry: new Date(2026, 4, 10, 20, 30) },
+            { id: 'link-p1', name: 'الصف الأول الإعدادي', expiry: new Date(2026, 4, 12, 20, 0) },
+            { id: 'link-p2', name: 'الصف الثاني الإعدادي', expiry: new Date(2026, 4, 10, 22, 0) },
+            { id: 'link-p3', name: 'الصف الثالث الإعدادي', expiry: new Date(2026, 4, 14, 21, 30) },
+            { id: 'link-s1', name: 'الصف الأول الثانوي', expiry: new Date(2026, 4, 11, 22, 0) }
         ];
 
-        // Load States
         let lectureStates = JSON.parse(localStorage.getItem('ict_lecture_states')) || {};
         classConfig.forEach(c => { if(lectureStates[c.id] === undefined) lectureStates[c.id] = true; });
 
         function updateUI() {
+            const now = new Date();
             classConfig.forEach(c => {
                 const btn = document.getElementById(c.id);
-                if(lectureStates[c.id]) {
-                    btn.classList.remove('btn-inactive');
-                    btn.innerHTML = 'انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i>';
-                } else {
+                const statusDiv = document.getElementById('status-' + c.id);
+                const isExpired = now > c.expiry;
+
+                if (isExpired) {
+                    btn.classList.add('btn-inactive');
+                    btn.innerHTML = 'انتهت المحاضرة';
+                    statusDiv.innerHTML = '<span class="status-badge status-expired">انتهت المحاضرة - بالتوفيق لأبنائنا الطلاب</span>';
+                } else if (!lectureStates[c.id]) {
                     btn.classList.add('btn-inactive');
                     btn.innerHTML = 'المحاضرة مغلقة حالياً';
+                    statusDiv.innerHTML = '';
+                } else {
+                    btn.classList.remove('btn-inactive');
+                    btn.innerHTML = 'انضم للمحاضرة <i class="fas fa-external-link-alt ms-2"></i>';
+                    statusDiv.innerHTML = '';
                 }
             });
             localStorage.setItem('ict_lecture_states', JSON.stringify(lectureStates));
@@ -340,6 +306,7 @@
             for(let i=0; i<80; i++) particles.push(new Particle()); 
             animate(); 
             updateUI(); 
+            setInterval(updateUI, 60000); // تحديث الحالة كل دقيقة
         };
         window.onresize = initCanvas;
     </script>
